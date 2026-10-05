@@ -49,7 +49,7 @@ export default function ProductListing({
 					<div className="product-card__image">
 						<Image
 							src={imageUrl}
-							alt={image.title || product.title}
+							alt={image?.title || product.title}
 							width={720}
 							height={540}
 							unoptimized

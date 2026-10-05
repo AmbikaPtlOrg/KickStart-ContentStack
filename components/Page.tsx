@@ -37,11 +37,12 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
       {/* Display hero image if it exists */}
       {page?.image ? (
         <div className="image-frame hero-image-frame">
+        
           <Image
             width={768}
             height={414}
-            src={page.image.url}
-            alt={page.image.title}
+            src={page.image?.url}
+            alt={page.image?.title}
             {...(page?.image?.$ && page?.image?.$.url)}
           />
         </div>
@@ -102,7 +103,7 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
                         <div className="product-card__image">
                           <Image
                             src={imageUrl}
-                            alt={image.title || product.title}
+                            alt={image?.title || product.title}
                             width={640}
                             height={480}
                             unoptimized
