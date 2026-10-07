@@ -1,5 +1,6 @@
 import ProductListing from "@/components/Products/page";
-import { getProductsByEfficiency } from "@/lib/contentstack";
+import ProductPreview from "@/components/Products/Preview";
+import { getProductsByEfficiency, isPreview } from "@/lib/contentstack";
 
 const efficiencies = ["all", "high", "medium", "low"] as const;
 type Efficiency = (typeof efficiencies)[number];
@@ -17,5 +18,9 @@ export default async function ProductPage({
 		: "all";
 	const products = await getProductsByEfficiency(efficiency);
 
-	return <ProductListing products={products} selectedEfficiency={efficiency} />;
+	return isPreview ? (
+		<ProductPreview products={products} selectedEfficiency={efficiency} />
+	) : (
+		<ProductListing products={products} selectedEfficiency={efficiency} />
+	);
 }

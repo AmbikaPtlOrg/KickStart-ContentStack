@@ -23,7 +23,7 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
           // Spread live preview attributes for editing capability in Contentstack
           {...(page?.$ && page?.$.title)}
         >
-          {page?.title} with Next
+          {page?.title}
         </h1>
       ) : null}
 

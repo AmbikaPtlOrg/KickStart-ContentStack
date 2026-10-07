@@ -107,7 +107,7 @@ export async function getProducts() {
 
   if (isPreview) {
     entries.forEach((entry) => {
-      contentstack.Utils.addEditableTags(entry, "productlisting", true);
+      contentstack.Utils.addEditableTags(entry, "product", true);
     });
   }
 
@@ -155,7 +155,7 @@ export async function getProductsByEfficiency(efficiency: string) {
 
   if (isPreview) {
     entries.forEach((entry) => {
-      contentstack.Utils.addEditableTags(entry, "productlisting", true);
+      contentstack.Utils.addEditableTags(entry, "product", true);
     });
   }
 
