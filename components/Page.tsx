@@ -2,6 +2,7 @@
 import DOMPurify from "isomorphic-dompurify";
 // Importing Next.js optimized Image component for better performance
 import Image from "next/image";
+import FeaturedProductsCarousel from "./FeaturedProductsCarousel";
 // Importing the Page type definition from our types file
 import { Page } from "../lib/types";
 // Importing Visual Builder class for empty block handling in Contentstack Live Preview
@@ -73,96 +74,119 @@ export default function ContentDisplay({ page }: ContentDisplayProps) {
         {...(page?.$ && page?.$.blocks)}
       >
         {page?.page_sections_modularblocks?.map((section, sectionIndex) => {
-          const products = section.product_carousel?.products ?? [];
+          if (section.product_carousel) {
+            return (
+              <FeaturedProductsCarousel
+                key={
+                  section.product_carousel._metadata?.uid ||
+                  section._metadata?.uid ||
+                  `product-carousel-${sectionIndex}`
+                }
+                products={section.product_carousel.products ?? []}
+              />
+            );
+          }
 
-          return (
-            <section
-              key={
-                section.product_carousel?._metadata?.uid ||
-                section._metadata?.uid ||
-                `product-carousel-${sectionIndex}`
-              }
-              className="space-y-4"
-              aria-label="Featured products"
-            >
-              <h2 className="text-2xl font-bold">Featured products</h2>
-              {products.length > 0 ? (
-                <div className="featured-products__grid grid auto-cols-[minmax(16rem,1fr)] grid-flow-col gap-4 overflow-x-auto pb-3">
-                  {products.map((product) => (
-                    <article
-                      key={product.uid || product.title}
-                      className="product-card min-w-0"
+          if (section.hero_banner) {
+            const heroBanner = section.hero_banner;
+            const bannerUrl =
+              typeof heroBanner.url === "string"
+                ? heroBanner.url
+                : heroBanner.url?.href;
+
+            return (
+              <section
+                key={
+                  heroBanner._metadata?.uid ||
+                  section._metadata?.uid ||
+                  `hero-banner-${sectionIndex}`
+                }
+                className="hero-banner"
+                aria-label={heroBanner.title || "Featured"}
+              >
+                {heroBanner.image?.url ? (
+                  <div className="hero-banner__image">
+                    <Image
+                      src={heroBanner.image.url}
+                      alt={heroBanner.image.title || heroBanner.title || ""}
+                      width={heroBanner.image.dimension?.width || 1200}
+                      height={heroBanner.image.dimension?.height || 800}
+                      className="w-full"
+                      {...(heroBanner.$?.image && {
+                        ...heroBanner.$.image,
+                      })}
+                    />
+                  </div>
+                ) : null}
+
+                <div className="hero-banner__content">
+                  {heroBanner.title ? (
+                    <h2
+                      className="text-3xl font-bold"
+                      {...(heroBanner.$?.title && {
+                        ...heroBanner.$.title,
+                      })}
                     >
-                      {(() => {
-                        const image = Array.isArray(product.product_image)
-                          ? product.product_image.find((asset) => asset.url?.trim())
-                          : product.product_image;
-                        const imageUrl = image?.url?.trim();
-
-                        return imageUrl ? (
-                        <div className="product-card__image">
-                          <Image
-                            src={imageUrl}
-                            alt={image?.title || product.title}
-                            width={640}
-                            height={480}
-                            unoptimized
-                            className="aspect-[4/3] w-full object-cover"
-                          />
-                        </div>
-                        ) : null;
-                      })()}
-                      <div className="space-y-2 p-4">
-                        <h3 className="text-lg font-semibold">{product.title}</h3>
-                        {typeof product.price === "number" ? (
-                          <p className="font-medium">
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            }).format(product.price)}
-                          </p>
-                        ) : null}
-                      </div>
-                    </article>
-                  ))}
+                      {heroBanner.title}
+                    </h2>
+                  ) : null}
+                  {heroBanner.description ? (
+                    <p
+                      className="hero-banner__description"
+                      {...(heroBanner.$?.description && {
+                        ...heroBanner.$.description,
+                      })}
+                    >
+                      {heroBanner.description}
+                    </p>
+                  ) : null}
+                  {bannerUrl ? (
+                    <a
+                      className="hero-banner__link"
+                      href={bannerUrl}
+                      {...(heroBanner.$?.url && {
+                        ...heroBanner.$.url,
+                      })}
+                    >
+                      {typeof heroBanner.url === "object" &&
+                      heroBanner.url?.title
+                        ? heroBanner.url.title
+                        : "Learn more"}
+                    </a>
+                  ) : null}
                 </div>
-              ) : (
-                <p className="text-sm text-gray-600">No products selected.</p>
-              )}
-            </section>
-          );
+              </section>
+            );
+          }
+
+          return null;
         })}
 
         {/* Map through blocks array to render each modular content block */}
         {page?.blocks?.map((item, index) => {
           const { block } = item; // Extract block data from item
-          const isImageLeft = block.layout === "image_left"; // Determine layout direction
          
           return (
             <div
               key={block._metadata?.uid || `block-${index}`} // Use unique identifier as key for React
               {...(page?.$ && page?.$[`blocks__${index}`])} // Live preview attributes for each block
-              className={`content-block flex flex-col md:flex-row items-center space-y-4 md:space-y-0 ${
-                isImageLeft ? "md:flex-row" : "md:flex-row-reverse" // Conditional layout based on block settings
-              }`}
+              className="content-block flex flex-col"
             >
-              {/* Image container - takes half width on medium screens and up */}
-              <div className="content-block__image w-full md:w-1/2">
+              <div className="content-block__image">
                 {block.image ? (
                   <Image
                     key={`image-${block._metadata?.uid || index}`} // Unique key for image
                     src={block.image.url}
                     alt={block.image.title}
-                    width={200}
-                    height={112}
+                    width={block.image.dimension?.width || 1920}
+                    height={block.image.dimension?.height || 800}
                     className="w-full"
                     {...(block?.$ && block?.$.image)} // Live preview attributes for image
                   />
                 ) : null}
               </div>
 
-              {/* Content container - takes half width on medium screens and up */}
-              <div className="content-block__copy w-full md:w-1/2">
+              <div className="content-block__copy w-full">
                 {/* Block title */}
                 {block.title ? (
                   <h2

@@ -1,5 +1,7 @@
 import type { Metadata } from "next"; // Importing the Metadata type from Next.js
+import Image from "next/image";
 import Link from "next/link";
+import logo from "./Logo.png";
 import "./globals.css"; // Importing global CSS styles
 
 export const metadata: Metadata = {
@@ -19,8 +21,13 @@ export default function RootLayout({
       <body>
         <header className="site-header">
           <nav className="site-nav" aria-label="Main navigation">
-            <Link className="site-brand" href="/">
-              Mobile Market
+            <Link className="site-brand" href="/" aria-label="Mobile Market home">
+              <Image
+                src={logo}
+                alt="Activision Logo"
+                priority
+                className="site-brand__logo"
+              />
             </Link>
             <div className="site-nav__links">
               <Link className="site-nav__link" href="/">

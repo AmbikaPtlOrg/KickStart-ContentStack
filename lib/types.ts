@@ -134,6 +134,7 @@ export interface PageSectionsModularBlock {
     products?: ProductsListing[];
     _metadata?: { uid: string };
   };
+  hero_banner?: HeroBannerBlock;
   _metadata?: { uid: string };
 }
 
@@ -143,8 +144,17 @@ export interface ProductAsset {
 }
 
 export interface HeroBannerBlock {
-  headline: string;
-  banner_image?: ProductAsset | null;
+  title?: string;
+  description?: string;
+  image?: File | null;
+  url?: string | Link | null;
+  _metadata?: { uid: string };
+  $?: {
+    title?: CSLPFieldMapping;
+    description?: CSLPFieldMapping;
+    image?: CSLPFieldMapping;
+    url?: CSLPFieldMapping;
+  };
 }
 
 export interface FeatureSectionBlock {

@@ -88,7 +88,7 @@ export default function ProductListing({
 			</section>
 			)}
 
-			
+		
 		</main>
 	);
 }

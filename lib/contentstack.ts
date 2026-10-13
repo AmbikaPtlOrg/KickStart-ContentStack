@@ -81,6 +81,7 @@ export async function getPage(url: string) {
     .contentType("page") // Specifying the content type as "page"
     .entry() // Accessing the entry
     .includeReference("page_sections_modularblocks.product_carousel.products")
+    .includeReference("page_sections_modularblocks.hero_banner.image")
     .query() // Creating a query
     .where("url", QueryOperation.EQUALS, url) // Filtering entries by URL
     .find<Page>(); // Executing the query and expecting a result of type Page
